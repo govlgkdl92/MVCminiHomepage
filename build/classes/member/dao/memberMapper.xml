@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="memberSQL">
+	<!-- 회원가입 -->
+	<insert id="write" parameterType="member">
+		insert into member(id, name, pwd, gender, email1, email2, tel1, tel2, tel3, zipcode, addr1, addr2, logtime) 
+						values(#{id}, #{name}, #{pwd}, #{gender}
+								, #{email1}, #{email2}, #{tel1}, #{tel2}, #{tel3}
+								, #{zipcode}, #{addr1}, #{addr2}, sysdate)
+								
+	</insert>
+	<!-- 아이디 중복 체크 -->
+	<select id="isExistID" parameterType="String" resultType="Integer">
+		select count(*) from member where id = #{id}
+	</select>
+	
+	<select id="getZipcodeList" parameterType="java.util.Map" resultType="member.bean.ZipcodeDTO">
+		select * from newzipcode where sido like '%' || #{sido} || '%'	and 
+		nvl(sigungu, '0') like '%' || #{sigungu} || '%' and roadname like '%' || #{roadname} || '%'
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" parameterType="java.util.Map" resultType="member">
+		select * from member where id = #{id} and pwd = #{pwd}
+	</select>
+	<!-- 내정보수정 -->
+	<select id="modifyInfo" parameterType="String" resultType="member">
+		select * from member where id = #{id}
+	</select>
+	<update id="modifyUpdate" parameterType="member">
+		UPDATE member SET name= #{name}, email1= #{email1}, email2= #{email2}, 
+						  gender= #{gender}, tel1= #{tel1}, tel2= #{tel2}, tel3= #{tel3}, 
+						  zipcode= #{zipcode}, addr1= #{addr1}, addr2=#{addr2} where id= #{id}
+	</update>
+	
+	<!-- 회원 탈퇴  -->
+	<delete id="deleteUser" parameterType="String">
+		delete from member where id = #{id}
+	</delete>
+</mapper>
+	
+<!-- 	
+					
+		
+	<insert id="write" parameterType="user"> 
+		insert into usertable values(#{name}, #{id}, #{pwd})
+	</insert>
+	
+	 출력 
+							이름이 달라서 강제 맵핑 시킨 모습 
+	<select id="getUserList" resultMap="userResult">
+		select * from usertable order by name
+	</select>
+	
+	
+	
+	
+
+	<update id="updateUser" parameterType="java.util.Map" >
+		update usertable set name=#{name}, pwd=#{pwd} where id=#{id}
+	</update>
+	
+
+	<delete id="deleteUser" parameterType="String">
+		delete from usertable where id = #{id}
+	</delete>
+	
+	<select id="search" parameterType="java.util.Map" resultType="user">	
+		select * from usertable where ${columnName} like '%' || #{value} || '%'		
+	</select>
+
+-->
+	
+
